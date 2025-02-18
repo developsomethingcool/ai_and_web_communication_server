@@ -58,11 +58,64 @@ def register_command():
         return
 
 # AI-related keywords for filtering messages
+# ALLOWED_TOPICS = [
+#     "machine learning", "deep learning", "neural networks",
+#     "computer vision", "natural language processing", "AI ethics",
+#     "chatbots", "reinforcement learning", "robotics"
+# ]
+
 ALLOWED_TOPICS = [
-    "machine learning", "deep learning", "neural networks",
-    "computer vision", "natural language processing", "AI ethics",
-    "chatbots", "reinforcement learning", "robotics"
+    # Core AI Concepts
+    "artificial intelligence", "machine learning", "deep learning", "neural networks", 
+    "computer vision", "natural language processing", "AI ethics", "reinforcement learning", 
+    "robotics", "supervised learning", "unsupervised learning", "semi-supervised learning",
+    "self-supervised learning", "transfer learning", "zero-shot learning", "one-shot learning",
+    "few-shot learning", "multi-modal AI", "explainable AI", "symbolic AI",
+
+    # Large Language Models (LLMs) and NLP
+    "chatbots", "LLM", "transformer models", "ChatGPT", "GPT", "GPT-3", "GPT-4", "GPT-4 Turbo", "BERT", "RoBERTa",
+    "XLNet", "T5", "BLOOM", "OPT", "Mistral", "LLaMA", "Claude", "Gemini", "PaLM", "Dolly", 
+    "open-source LLMs", "text generation", "text summarization", "question answering",
+    "named entity recognition", "sentiment analysis", "text classification", "word embeddings",
+    "attention mechanism", "tokenization", "vector embeddings", "retrieval-augmented generation (RAG)", 
+    "prompt engineering", "fine-tuning", "context length", "in-context learning",
+
+    # AI Methodologies & Training Techniques
+    "stochastic gradient descent", "backpropagation", "gradient boosting", "decision trees",
+    "support vector machines", "k-means clustering", "random forests", "bayesian networks",
+    "genetic algorithms", "autoencoders", "generative adversarial networks (GANs)", 
+    "variational autoencoders (VAEs)", "convolutional neural networks (CNNs)", "recurrent neural networks (RNNs)",
+    "long short-term memory (LSTM)", "gated recurrent units (GRUs)", "transformers", "attention is all you need",
+    "self-attention", "contrastive learning", "meta-learning", "federated learning", "swarm intelligence",
+
+    # AI Applications
+    "speech recognition", "speech-to-text", "text-to-speech", "AI music generation", "AI-generated art",
+    "autonomous vehicles", "recommendation systems", "AI in healthcare", "AI in finance", "fraud detection",
+    "AI in cybersecurity", "AI in gaming", "AI in education", "AI in robotics", "AI-powered assistants",
+    "AI in supply chain", "AI in marketing", "AI in customer service", "AI-powered search engines",
+    "AI-driven analytics", "AI in drug discovery", "digital twins", "edge AI", "AI-generated video",
+
+    # AI Ethics, Bias & Safety
+    "AI bias", "algorithmic fairness", "responsible AI", "explainability", "black box AI", 
+    "AI governance", "AI safety", "AI risks", "AI misinformation", "AI for good", 
+    "data privacy in AI", "AI hallucinations", "alignment problem", "value alignment",
+    "AI regulatory policies", "AI transparency", "model interpretability", "adversarial AI",
+    "AI misuse prevention", "truthful AI", "data leakage in AI",
+
+    # AI Tools & Frameworks
+    "TensorFlow", "PyTorch", "Keras", "Hugging Face", "scikit-learn", "XGBoost", "LightGBM",
+    "ONNX", "JAX", "DeepSpeed", "Ray", "LangChain", "ChromaDB", "OpenAI API", "Anthropic API",
+    "Google Vertex AI", "Microsoft Azure AI", "AWS SageMaker", "Colab", "Jupyter Notebooks",
+
+    # AI Trends & Research Topics
+    "neuromorphic computing", "AGI", "artificial general intelligence", "AI singularity",
+    "AI-powered creativity", "AI-generated code", "AI and quantum computing", "AI in physics",
+    "AI in biology", "neural architecture search", "transformer efficiency", "model compression",
+    "distillation in deep learning", "quantization in AI", "low-rank adaptation (LoRA)", 
+    "RLHF (reinforcement learning from human feedback)", "human-AI collaboration", 
+    "multimodal learning", "AI in law", "AI in environmental science", "AI for accessibility"
 ]
+
 
 # AI facts for auto-response
 AI_FACTS = [
@@ -87,7 +140,7 @@ def is_message_on_topic(content):
     content_lower = content.lower()
 
     # Allow greetings and general phrases
-    general_phrases = ["hello", "hi", "hey", "help", "question", "info"]
+    general_phrases = ["hello", "hi", "hey", "help", "question", "info", "hallo", "hi", "salut", "interesting", "what is that", "agree"]
 
     # Allow simple mathematical expressions (e.g. "2 + 3", "10 / 2")
     math_pattern = re.compile(r'^\d+\s*[\+\-\*\/]\s*\d+$')

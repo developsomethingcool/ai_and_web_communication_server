@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple React App: Show Channels</title>
+    <title>Original React App: Show the channels</title>
 </head>
 <body>
     <div id="root"></div>
@@ -16,11 +16,9 @@
 
         function ChannelList() {
             // React component that shows a channel list
-            // content is fetched from the university hub (works only on university network, use VPN)
-            //
             const [channels, setChannels] = React.useState([]);
 
-            const API_URL = "http://127.0.0.1:5000/hub/channels"; // Flask server running on port 5555
+            const API_URL = "http://127.0.0.1:5555/hub/channels"; // Flask server running on port 5555
 
             React.useEffect(() => {
                 fetch(API_URL)
