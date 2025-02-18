@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Channel - {{ channel.name }}</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #dfe9f3);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        /* Header Section */
+        header {
+            background-color: #ffffff;
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 600;
+            color: #222;
+        }
+
+        /* Back Link */
+        .back-link {
+            margin-top: 15px;
+            font-size: 1em;
+        }
+
+        .back-link a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Message Container */
+        .messages-container {
+            max-width: 700px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .message {
+            text-align: left;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background-color: #e3f2fd;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .message h2 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .message p {
+            font-size: 1em;
+            margin: 0;
+        }
+
+        .timestamp {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Message Form */
+        .form-container {
+            background: #ffffff;
+            max-width: 700px;
+            width: 100%;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .form-container input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-container input[type="text"]:focus {
+            border-color: #4a90e2;
+            box-shadow: 0px 3px 12px rgba(0, 120, 255, 0.3);
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #4a90e2;
+            color: white;
+            font-size: 1em;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #357ab8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .messages-container, .form-container {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .message {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>Channel: {{ channel.name }}</h1>
+    </header>
+
+    <!-- Back to List of Channels -->
+    <p class="back-link">
+        <a href="{{ url_for('home_page') }}">← Back to List of Channels</a>
+    </p>
+
+    {% if channel %}
+        <!-- Message List -->
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="message">
+                    <h2>{{ message.sender }}</h2>
+                    <p>{{ message.content }}</p>
+                    <p class="timestamp">{{ message.timestamp }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Message Form -->
+        <div class="form-container">
+            <h2>Post a Message</h2>
+            <form action="post" method="post">
+                <input type="hidden" name="channel" value="{{ channel.endpoint | urlencode }}">
+                <input type="text" name="sender" id="sender" placeholder="Your Name">
+                <input type="text" name="content" id="content" placeholder="Your Message">
+                <input type="submit" value="Post">
+            </form>
+        </div>
+
+    {% else %}
+        <h1>Channel not found</h1>
+    {% endif %}
+
+</body>
+</html>

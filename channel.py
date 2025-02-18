@@ -21,12 +21,12 @@ app.app_context().push()  # create an app context before initializing db
 
 # Configuration
 #HUB_URL = 'http://vm146.rz.uni-osnabrueck.de/hub'
-HUB_URL = 'http://127.0.0.1:5000'
-HUB_AUTHKEY = 'Crr-K24d-2N'
+HUB_URL = 'http://127.0.0.1:5555'
+HUB_AUTHKEY = '0987654321'
 CHANNEL_AUTHKEY = '0987654321'
 CHANNEL_NAME = "AI Web Discussion Channel"
 #CHANNEL_ENDPOINT = "http://vm146.rz.uni-osnabrueck.de:5001"
-CHANNEL_ENDPOINT = 'http://127.0.0.1:5555'
+CHANNEL_ENDPOINT = 'http://127.0.0.1:5000'
 CHANNEL_FILE = 'messages.json'
 CHANNEL_TYPE_OF_SERVICE = 'aiweb24:chat'
 MAX_MESSAGES = 50  # Limit to 50 messages
@@ -74,6 +74,10 @@ AI_FACTS = [
 ]
 
 def check_authorization(request):
+    
+    print("Expected Authorization:", 'authkey ' + CHANNEL_AUTHKEY)
+    print("Received Authorization:", request.headers.get('Authorization'))
+    
     if 'Authorization' not in request.headers or request.headers['Authorization'] != 'authkey ' + CHANNEL_AUTHKEY:
         return False
     return True
@@ -124,7 +128,12 @@ def send_message():
         return jsonify({"error": "Invalid authorization"}), 400
 
     message = request.json
-    if not message or 'content' not in message or 'sender' not in message or 'timestamp' not in message:
+    
+       # If no timestamp is provided, use current time
+    if 'timestamp' not in message:
+        message['timestamp'] = time.time()
+    
+    if not message or 'content' not in message or 'sender' not in message:
         return jsonify({"error": "Invalid message format"}), 400
 
     # Custom profanity filter
@@ -152,7 +161,7 @@ def send_message():
     messages.append({
         'content': message['content'],
         'sender': message['sender'],
-        'timestamp': message['timestamp'],
+        'timestamp': time.time(),
         'extra': extra_data,
     })
 
@@ -172,23 +181,6 @@ def auto_response():
     incoming_message = request.json.get('content', '').lower()
     response = auto_reply_logic(incoming_message)
     return jsonify({"response": response}), 200
-def is_message_on_topic(content):
-    """Check if the message contains AI-related topics or math expressions."""
-    content_lower = content.lower()
-
-    # Allow greetings and general phrases
-    general_phrases = ["hello", "hi", "hey", "help", "question", "info"]
-
-    # Allow simple mathematical expressions (e.g. "2 + 3", "10 / 2")
-    math_pattern = re.compile(r'^\d+\s*[\+\-\*\/]\s*\d+$')
-
-    # Check AI-related topics, greetings, or math operations
-    if any(topic in content_lower for topic in ALLOWED_TOPICS) or \
-       any(phrase in content_lower for phrase in general_phrases) or \
-       math_pattern.match(content_lower):
-        return True
-
-    return False
 
 
 def auto_reply_logic(message):
@@ -222,6 +214,32 @@ def auto_reply_logic(message):
 
     return "Thank you for your message. Stay tuned for AI discussions or type 'help' for options."
 
+@app.route('/', methods=['PATCH'])
+def update_message():
+    if not check_authorization(request):
+        return jsonify({"error": "Invalid authorization"}), 400
+
+    patch_data = request.json
+    if not patch_data or 'timestamp' not in patch_data:
+        return jsonify({"error": "No timestamp provided"}), 400
+
+    messages = read_messages()
+    message_found = False
+
+    for message in messages:
+        if message['timestamp'] == patch_data['timestamp']:
+            # Update the message data; for example, updating the 'extra' field
+            if 'extra' in patch_data:
+                message['extra'] = patch_data['extra']
+            message_found = True
+            break
+
+    if not message_found:
+        return jsonify({"error": "Message not found"}), 404
+
+    save_messages(messages)
+    return jsonify({"message": "Message updated"}), 200
+
 
 
 def read_messages():
@@ -252,4 +270,5 @@ if not read_messages():
     }])
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(port=5000, debug=True)
+#host='127.0.0.1', 

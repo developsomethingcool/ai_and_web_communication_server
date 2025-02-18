@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple React App: Show Channels</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+
+        function ChannelList() {
+            // React component that shows a channel list
+            // content is fetched from the university hub (works only on university network, use VPN)
+            //
+            const [channels, setChannels] = React.useState([]);
+
+            const API_URL = "http://127.0.0.1:5000/hub/channels"; // Flask server running on port 5555
+
+            React.useEffect(() => {
+                fetch(API_URL)
+                .then(response => response.json())
+                .then(data => setChannels(data.channels))
+                .catch(error => console.error("Failed to fetch channels:", error));
+            }, []);
+
+            return (
+                <div>
+                    <h2>Channel List</h2>
+                    <ul>
+                        {channels.map(channel => (
+                            <li key={channel.id}>
+                                {channel.name} (URL: {channel.endpoint}, Type: {channel.type_of_service})
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        // main code: render the ChannelList component, add more components here
+        ReactDOM.render(
+            <div>
+                <h1>Chat client: List of channels</h1>
+                <ChannelList />
+
+            </div>,
+            document.getElementById('root'));
+    </script>
+</body>
+</html>
