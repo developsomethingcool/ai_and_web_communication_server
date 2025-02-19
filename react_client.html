@@ -1,4 +1,88 @@
+
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Chat App</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+    <div id="root"></div>
+    <script type="text/babel">
+        function ChatApp() {
+            const [username, setUsername] = React.useState(localStorage.getItem("username") || "");
+            const [channels, setChannels] = React.useState([]);
+            const [activeChannel, setActiveChannel] = React.useState(null);
+            const [messages, setMessages] = React.useState({});
+            const [searchQuery, setSearchQuery] = React.useState("");
+            const [inputMessage, setInputMessage] = React.useState("");
+
+            React.useEffect(() => {
+                if (!username) {
+                    const newUsername = prompt("Enter your username:");
+                    if (newUsername) {
+                        localStorage.setItem("username", newUsername);
+                        setUsername(newUsername);
+                    }
+                }
+                fetch("http://127.0.0.1:5555/hub/channels")
+                    .then(response => response.json())
+                    .then(data => setChannels(data.channels))
+                    .catch(error => console.error("Failed to fetch channels:", error));
+            }, []);
+
+            const sendMessage = () => {
+                if (!inputMessage.trim() || !activeChannel) return;
+                setMessages({
+                    ...messages,
+                    [activeChannel]: [...(messages[activeChannel] || []), { user: username, text: inputMessage }],
+                });
+                setInputMessage("");
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+                    <h2 className="text-2xl font-bold mb-4">Chat Application</h2>
+                    <div className="grid grid-cols-4 gap-4">
+                        <div className="col-span-1 p-4 bg-gray-50 rounded-lg">
+                            <h3 className="font-semibold mb-2">Channels</h3>
+                            <input type="text" className="w-full p-2 mb-2 border rounded" placeholder="Search..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                            <ul>
+                                {channels.filter(ch => ch.name.includes(searchQuery)).map(ch => (
+                                    <li key={ch.id} className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => setActiveChannel(ch.name)}>
+                                        {ch.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="col-span-3 p-4 bg-gray-50 rounded-lg">
+                            <h3 className="font-semibold mb-2">Chat - {activeChannel || "Select a Channel"}</h3>
+                            <div className="h-64 overflow-y-auto border p-2 mb-2">
+                                {(messages[activeChannel] || []).map((msg, index) => (
+                                    <div key={index} className={msg.user === username ? "text-right" : "text-left"}>
+                                        <strong>{msg.user}:</strong> {msg.text}
+                                    </div>
+                                ))}
+                            </div>
+                            <input type="text" className="w-full p-2 border rounded" placeholder="Type a message..." value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} />
+                            <button className="w-full mt-2 bg-blue-500 text-white p-2 rounded" onClick={sendMessage}>Send</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<ChatApp />, document.getElementById("root"));
+    </script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -51,4 +135,4 @@
             document.getElementById('root'));
     </script>
 </body>
-</html>
+</html> -->

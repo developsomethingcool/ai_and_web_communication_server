@@ -22,7 +22,7 @@ app.app_context().push()  # create an app context before initializing db
 # Configuration
 #HUB_URL = 'http://vm146.rz.uni-osnabrueck.de/hub'
 HUB_URL = 'http://127.0.0.1:5555'
-HUB_AUTHKEY = '0987654321'
+HUB_AUTHKEY = 'Crr-K24d-2N'
 CHANNEL_AUTHKEY = '0987654321'
 CHANNEL_NAME = "AI Web Discussion Channel"
 #CHANNEL_ENDPOINT = "http://vm146.rz.uni-osnabrueck.de:5001"

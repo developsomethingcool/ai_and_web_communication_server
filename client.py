@@ -5,7 +5,7 @@ import datetime
 
 app = Flask(__name__)
 
-HUB_AUTHKEY = '0987654321'
+HUB_AUTHKEY = 'Crr-K24d-2N'
 HUB_URL = 'http://localhost:5555'
 
 CHANNELS = None
