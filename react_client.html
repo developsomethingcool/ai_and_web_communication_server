@@ -1,19 +1,27 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>React Chat App</title>
+
+    <!-- Load React and ReactDOM for rendering the React components -->
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+    <!-- Load Babel to allow writing JSX in the script -->
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- Load Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-4">
+    <!-- Root container where the React app will be rendered -->
     <div id="root"></div>
+
     <script type="text/babel">
         function ChatApp() {
+            // State variables to manage username, channels, active channel, messages, search query, and input message
             const [username, setUsername] = React.useState(localStorage.getItem("username") || "");
             const [channels, setChannels] = React.useState([]);
             const [activeChannel, setActiveChannel] = React.useState(null);
@@ -21,37 +29,52 @@
             const [searchQuery, setSearchQuery] = React.useState("");
             const [inputMessage, setInputMessage] = React.useState("");
 
+            // useEffect runs on component mount to fetch channels and prompt for username if not stored
             React.useEffect(() => {
                 if (!username) {
+                    // Prompt user for a username if none is stored
                     const newUsername = prompt("Enter your username:");
                     if (newUsername) {
                         localStorage.setItem("username", newUsername);
                         setUsername(newUsername);
                     }
                 }
+
+                // Fetch available chat channels from the backend
                 fetch("http://127.0.0.1:5555/hub/channels")
                     .then(response => response.json())
-                    .then(data => setChannels(data.channels))
+                    .then(data => setChannels(data.channels)) // Store fetched channels in state
                     .catch(error => console.error("Failed to fetch channels:", error));
             }, []);
 
+            // Function to send a new message
             const sendMessage = () => {
-                if (!inputMessage.trim() || !activeChannel) return;
+                if (!inputMessage.trim() || !activeChannel) return; // Prevent sending empty messages
+
+                // Add the new message to the messages state
                 setMessages({
                     ...messages,
                     [activeChannel]: [...(messages[activeChannel] || []), { user: username, text: inputMessage }],
                 });
+
+                // Clear the input field after sending
                 setInputMessage("");
             };
 
             return (
                 <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
                     <h2 className="text-2xl font-bold mb-4">Chat Application</h2>
+
                     <div className="grid grid-cols-4 gap-4">
+                        {/* Sidebar for displaying channels */}
                         <div className="col-span-1 p-4 bg-gray-50 rounded-lg">
                             <h3 className="font-semibold mb-2">Channels</h3>
+
+                            {/* Search input for filtering channels */}
                             <input type="text" className="w-full p-2 mb-2 border rounded" placeholder="Search..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+
                             <ul>
+                                {/* Filter and display channels based on search query */}
                                 {channels.filter(ch => ch.name.includes(searchQuery)).map(ch => (
                                     <li key={ch.id} className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => setActiveChannel(ch.name)}>
                                         {ch.name}
@@ -59,16 +82,25 @@
                                 ))}
                             </ul>
                         </div>
+
+                        {/* Chat area */}
                         <div className="col-span-3 p-4 bg-gray-50 rounded-lg">
                             <h3 className="font-semibold mb-2">Chat - {activeChannel || "Select a Channel"}</h3>
+
+                            {/* Chat messages container */}
                             <div className="h-64 overflow-y-auto border p-2 mb-2">
+                                {/* Display messages of the selected channel */}
                                 {(messages[activeChannel] || []).map((msg, index) => (
                                     <div key={index} className={msg.user === username ? "text-right" : "text-left"}>
                                         <strong>{msg.user}:</strong> {msg.text}
                                     </div>
                                 ))}
                             </div>
+
+                            {/* Input field for typing messages */}
                             <input type="text" className="w-full p-2 border rounded" placeholder="Type a message..." value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} />
+
+                            {/* Send message button */}
                             <button className="w-full mt-2 bg-blue-500 text-white p-2 rounded" onClick={sendMessage}>Send</button>
                         </div>
                     </div>
@@ -76,63 +108,8 @@
             );
         }
 
+        // Render the ChatApp component inside the root div
         ReactDOM.render(<ChatApp />, document.getElementById("root"));
     </script>
 </body>
 </html>
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Original React App: Show the channels</title>
-</head>
-<body>
-    <div id="root"></div>
-
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-
-    <script type="text/babel">
-
-        function ChannelList() {
-            // React component that shows a channel list
-            const [channels, setChannels] = React.useState([]);
-
-            const API_URL = "http://127.0.0.1:5555/hub/channels"; // Flask server running on port 5555
-
-            React.useEffect(() => {
-                fetch(API_URL)
-                .then(response => response.json())
-                .then(data => setChannels(data.channels))
-                .catch(error => console.error("Failed to fetch channels:", error));
-            }, []);
-
-            return (
-                <div>
-                    <h2>Channel List</h2>
-                    <ul>
-                        {channels.map(channel => (
-                            <li key={channel.id}>
-                                {channel.name} (URL: {channel.endpoint}, Type: {channel.type_of_service})
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            );
-        }
-
-        // main code: render the ChannelList component, add more components here
-        ReactDOM.render(
-            <div>
-                <h1>Chat client: List of channels</h1>
-                <ChannelList />
-
-            </div>,
-            document.getElementById('root'));
-    </script>
-</body>
-</html> -->
