@@ -20,18 +20,17 @@ app.config.from_object(__name__ + '.ConfigClass')  # configuration
 app.app_context().push()  # create an app context before initializing db
 
 # Configuration
-#HUB_URL = 'http://vm146.rz.uni-osnabrueck.de/hub'
-#HUB_URL = 'http://127.0.0.1:5555'
-HUB_URL = "http://vm150.rz.uni-osnabrueck.de/ai_and_web_communication_server/hub.wsgi"
+HUB_URL = 'http://127.0.0.1:5555'
+#HUB_URL = "http://vm146.rz.uni-osnabrueck.de/hub"
 HUB_AUTHKEY = 'Crr-K24d-2N'
 CHANNEL_AUTHKEY = '0987654321'
 CHANNEL_NAME = "AI Web Discussion Channel"
-#CHANNEL_ENDPOINT = 'http://127.0.0.1:5000'
-CHANNEL_ENDPOINT = "http://vm150.rz.uni-osnabrueck.de/ai_and_web_communication_server/channel.wsgi"
+CHANNEL_ENDPOINT = 'http://127.0.0.1:5000'
+#CHANNEL_ENDPOINT = "http://vm146.rz.uni-osnabrueck.de/u065/channel.wsgi"
 CHANNEL_FILE = 'messages.json'
 CHANNEL_TYPE_OF_SERVICE = 'aiweb24:chat'
 MAX_MESSAGES = 50  # Limit to 50 messages
-MESSAGE_EXPIRY_SECONDS = 86400  # 1 day in seconds
+MESSAGE_EXPIRY_SECONDS = 86400000  # 1 day in seconds
 
 # Load better-profanity filter
 profanity.load_censor_words()
@@ -58,12 +57,6 @@ def register_command():
         print(response.text)
         return
 
-# AI-related keywords for filtering messages
-# ALLOWED_TOPICS = [
-#     "machine learning", "deep learning", "neural networks",
-#     "computer vision", "natural language processing", "AI ethics",
-#     "chatbots", "reinforcement learning", "robotics"
-# ]
 
 ALLOWED_TOPICS = [
     # Core AI Concepts
@@ -297,11 +290,11 @@ def update_message():
 
 
 def read_messages():
-    try:
-        with open(CHANNEL_FILE, 'r') as f:
-            messages = json.load(f)
-    except (FileNotFoundError, json.decoder.JSONDecodeError):
-        messages = []
+    #try:
+    with open(CHANNEL_FILE, 'r') as f:
+        messages = json.load(f)
+    #except (FileNotFoundError, json.decoder.JSONDecodeError):
+        #messages = []
     return messages
 
 def save_messages(messages):
@@ -324,5 +317,5 @@ if not read_messages():
     }])
 
 if __name__ == '__main__':
-    #app.run(port=5000, debug=True)
-    app.run(debug=False)
+    app.run(port=5000, debug=True)
+    #app.run(debug=False)

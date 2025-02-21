@@ -6,8 +6,8 @@ import datetime
 app = Flask(__name__)
 
 HUB_AUTHKEY = 'Crr-K24d-2N'
-#HUB_URL = 'http://localhost:5555'
-HUB_URL = "http://vm150.rz.uni-osnabrueck.de/ai_and_web_communication_server/hub.wsgi"
+HUB_URL = 'http://localhost:5555'
+#HUB_URL = "http://vm146.rz.uni-osnabrueck.de/u065/ai_and_web_communication_server/hub"
 
 CHANNELS = None
 LAST_CHANNEL_UPDATE = None
@@ -81,5 +81,5 @@ def post_message():
 
 # Start development web server
 if __name__ == '__main__':
-    app.run(debug=False)
-    #app.run(port=5005, debug=True)
+    #app.run(debug=False)
+    app.run(port=5005, debug=True)

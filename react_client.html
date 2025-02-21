@@ -41,7 +41,7 @@
                 }
 
                 // Fetch available chat channels from the backend
-                fetch("http://vm150.rz.uni-osnabrueck.de/ai_and_web_communication_server/hub.wsgi/channels")
+                fetch("http://vm146.rz.uni-osnabrueck.de/hub/channels")
                     .then(response => response.json())
                     .then(data => setChannels(data.channels)) // Store fetched channels in state
                     .catch(error => console.error("Failed to fetch channels:", error));
