@@ -21,12 +21,10 @@ app.app_context().push()  # create an app context before initializing db
 
 # Configuration
 HUB_URL = 'http://127.0.0.1:5555'
-#HUB_URL = "http://vm146.rz.uni-osnabrueck.de/hub"
 HUB_AUTHKEY = 'Crr-K24d-2N'
 CHANNEL_AUTHKEY = '0987654321'
 CHANNEL_NAME = "AI Web Discussion Channel"
 CHANNEL_ENDPOINT = 'http://127.0.0.1:5000'
-#CHANNEL_ENDPOINT = "http://vm146.rz.uni-osnabrueck.de/u065/channel.wsgi"
 CHANNEL_FILE = 'messages.json'
 CHANNEL_TYPE_OF_SERVICE = 'aiweb24:chat'
 MAX_MESSAGES = 50  # Limit to 50 messages
@@ -318,4 +316,3 @@ if not read_messages():
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
-    #app.run(debug=False)

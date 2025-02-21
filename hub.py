@@ -136,5 +136,4 @@ def get_channels():
 
 # Start development web server
 if __name__ == '__main__':
-    #app.run(debug=False)
     app.run(port=5555, debug=True)

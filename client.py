@@ -7,7 +7,6 @@ app = Flask(__name__)
 
 HUB_AUTHKEY = 'Crr-K24d-2N'
 HUB_URL = 'http://localhost:5555'
-#HUB_URL = "http://vm146.rz.uni-osnabrueck.de/u065/ai_and_web_communication_server/hub"
 
 CHANNELS = None
 LAST_CHANNEL_UPDATE = None
