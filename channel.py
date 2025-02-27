@@ -28,7 +28,7 @@ CHANNEL_ENDPOINT = 'http://127.0.0.1:5000'
 CHANNEL_FILE = 'messages.json'
 CHANNEL_TYPE_OF_SERVICE = 'aiweb24:chat'
 MAX_MESSAGES = 50  # Limit to 50 messages
-MESSAGE_EXPIRY_SECONDS = 86400000  # 1 day in seconds
+MESSAGE_EXPIRY_SECONDS = 86400000  # 100 days in seconds
 
 # Load better-profanity filter
 profanity.load_censor_words()
