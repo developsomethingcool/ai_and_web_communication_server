@@ -58,10 +58,10 @@ def register_command():
 
 ALLOWED_TOPICS = [
     # Core AI Concepts
-    "artificial intelligence", "machine learning", "deep learning", "neural networks", 
+    "AI","artificial intelligence", "machine learning", "deep learning", "neural networks", 
     "computer vision", "natural language processing", "AI ethics", "reinforcement learning", 
     "robotics", "supervised learning", "unsupervised learning", "semi-supervised learning",
-    "self-supervised learning", "transfer learning", "zero-shot learning", "one-shot learning",
+    "self-supervised learning", "ai", "ml", "transfer learning", "zero-shot learning", "one-shot learning",
     "few-shot learning", "multi-modal AI", "explainable AI", "symbolic AI",
 
     # Large Language Models (LLMs) and NLP
